@@ -5,7 +5,8 @@ const {
   finalPrompt,
   getConverterDest,
   getConverterSource,
-  getConverterType
+  getConverterType,
+  handleFatalError
 } = require('./process');
 
 // FUNCTION: Merge new changes into application
@@ -15,20 +16,25 @@ const mergeChanges = (delta, options) => Object.assign({}, options, delta);
 const stage1 = (stage, args, options) => {
   return new Promise(resolve => {
     if (!stage || stage <= 1) {
-      (async () =>
-        resolve(
-          mergeChanges(
-            await ((stage, args, options) =>
-              stage === 1
-                ? getConverterType.apply(null, args)
-                : getConverterType(false, void 0, options))(
-              stage,
-              args,
+      (async () => {
+        try {
+          resolve(
+            mergeChanges(
+              await ((stage, args, options) =>
+                stage === 1
+                  ? getConverterType.apply(null, args)
+                  : getConverterType(false, void 0, options))(
+                stage,
+                args,
+                options
+              ),
               options
-            ),
-            options
-          )
-        ))();
+            )
+          );
+        } catch (err) {
+          handleFatalError(err);
+        }
+      })();
     } else {
       resolve(options);
     }
@@ -39,20 +45,25 @@ const stage1 = (stage, args, options) => {
 const stage2 = (stage, args, options) =>
   new Promise(resolve => {
     if (!stage || stage <= 2) {
-      (async () =>
-        resolve(
-          mergeChanges(
-            await ((stage, args, options) =>
-              stage === 2
-                ? getConverterSource.apply(null, args)
-                : getConverterSource(false, void 0, options))(
-              stage,
-              args,
+      (async () => {
+        try {
+          resolve(
+            mergeChanges(
+              await ((stage, args, options) =>
+                stage === 2
+                  ? getConverterSource.apply(null, args)
+                  : getConverterSource(false, void 0, options))(
+                stage,
+                args,
+                options
+              ),
               options
-            ),
-            options
-          )
-        ))();
+            )
+          );
+        } catch (err) {
+          handleFatalError(err);
+        }
+      })();
     } else {
       resolve(options);
     }
@@ -62,20 +73,25 @@ const stage2 = (stage, args, options) =>
 const stage3 = (stage, args, options) =>
   new Promise(resolve => {
     if (!stage || stage <= 3) {
-      (async () =>
-        resolve(
-          mergeChanges(
-            await ((stage, args, options) =>
-              stage === 3
-                ? getConverterDest.apply(null, args)
-                : getConverterDest(false, void 0, options))(
-              stage,
-              args,
+      (async () => {
+        try {
+          resolve(
+            mergeChanges(
+              await ((stage, args, options) =>
+                stage === 3
+                  ? getConverterDest.apply(null, args)
+                  : getConverterDest(false, void 0, options))(
+                stage,
+                args,
+                options
+              ),
               options
-            ),
-            options
-          )
-        ))();
+            )
+          );
+        } catch (err) {
+          handleFatalError(err);
+        }
+      })();
     } else {
       resolve(options);
     }
@@ -85,15 +101,20 @@ const stage3 = (stage, args, options) =>
 const stage4 = (stage, args, options) =>
   new Promise(resolve => {
     if (!stage || stage <= 4) {
-      (async () =>
-        resolve(
-          mergeChanges(
-            await ((stage, args, options) =>
-              stage === 4
-                ? finalPrompt.apply(null, args)
-                : finalPrompt(false, options))(stage, args, options)
-          )
-        ))();
+      (async () => {
+        try {
+          resolve(
+            mergeChanges(
+              await ((stage, args, options) =>
+                stage === 4
+                  ? finalPrompt.apply(null, args)
+                  : finalPrompt(false, options))(stage, args, options)
+            )
+          );
+        } catch (err) {
+          handleFatalError(err);
+        }
+      })();
     } else {
       resolve(options);
     }
@@ -106,25 +127,27 @@ async function pipeline(stage, args, options) {
   let currentArgs = args;
   let currentOptions = options;
   // SUB-FUNCTION: Clear state
-  const clearState = options => {
-    // Clear state
-    currentState = void 0;
-    currentArgs = void 0;
+  const clearState = (options, stepState, procesState) => {
+    // Clear state if past the correct error state
+    if (stepState === procesState) {
+      currentState = void 0;
+      currentArgs = void 0;
+    }
     // Return
     return options;
   };
   // Stage 1
   currentOptions = await stage1(currentState, currentArgs, currentOptions);
   // Clear state
-  clearState();
+  clearState(currentOptions, 1, currentState);
   // Stage 2
   currentOptions = await stage2(currentState, currentArgs, currentOptions);
   // Clear state
-  clearState();
+  clearState(currentOptions, 2, currentState);
   // Stage 3
   currentOptions = await stage3(currentState, currentArgs, currentOptions);
   // Clear state
-  clearState();
+  clearState(currentOptions, 3, currentState);
   // Stage 4
   currentOptions = await stage4(currentState, currentArgs, currentOptions);
 }
@@ -142,7 +165,5 @@ let options = {
 try {
   pipeline(void 0, [], options);
 } catch (err) {
-  console.warn(`An error has occurred, ${err}`);
-  console.error('Script will exit...');
-  process.exit();
+  handleFatalError(err);
 }

@@ -10,6 +10,13 @@ const fs = require('fs');
 const converterIndex = require('./converter')();
 const { q1, q2, q3, q4 } = require('./prompts');
 
+// FUNCTION: Handle fatal error
+const handleFatalError = err => {
+  console.warn(`An error has occurred, ${err}`);
+  console.error('Script will exit...');
+  process.exit();
+};
+
 // FUNCTION: Get file destination
 const finalPrompt = (retry = false, options) =>
   new Promise((resolve, reject) => {
@@ -27,9 +34,7 @@ const finalPrompt = (retry = false, options) =>
           try {
             options.pipeline(4, [true, options], options);
           } catch (err) {
-            console.warn(`An error has occurred, ${err}`);
-            console.error('Script will exit...');
-            process.exit();
+            handleFatalError(err);
           }
         })();
       }
@@ -98,9 +103,7 @@ const getConverterDest = (retry = false, lastAnswer = void 0, options) =>
           try {
             options.pipeline(3, [true, answer, options], options);
           } catch (err) {
-            console.warn(`An error has occurred, ${err}`);
-            console.error('Script will exit...');
-            process.exit();
+            handleFatalError(err);
           }
         })();
       }
@@ -130,9 +133,7 @@ const getConverterSource = (retry = false, lastAnswer = void 0, options) =>
           try {
             options.pipeline(2, [true, path.resolve(answer), options], options);
           } catch (err) {
-            console.warn(`An error has occurred, ${err}`);
-            console.error('Script will exit...');
-            process.exit();
+            handleFatalError(err);
           }
         })();
       }
@@ -162,9 +163,7 @@ const getConverterType = (retry = false, lastAnswer = void 0, options) => {
           try {
             options.pipeline(1, [true, answer, options], options);
           } catch (err) {
-            console.warn(`An error has occurred, ${err}`);
-            console.error('Script will exit...');
-            process.exit();
+            handleFatalError(err);
           }
         })();
       }
@@ -184,5 +183,6 @@ module.exports = {
   finalPrompt: finalPrompt,
   getConverterDest: getConverterDest,
   getConverterSource: getConverterSource,
-  getConverterType: getConverterType
+  getConverterType: getConverterType,
+  handleFatalError: handleFatalError
 };
