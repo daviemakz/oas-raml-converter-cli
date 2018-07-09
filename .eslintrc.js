@@ -46,7 +46,10 @@ module.exports = {
   rules: {
     'comma-dangle': 2,
     'no-cond-assign': 2,
-    'no-console': ['error', { allow: ['log', 'warn', 'error'] }],
+    'no-console': [
+      'error',
+      { allow: ['log', 'warn', 'error'] }
+    ],
     'no-constant-condition': 2,
     'no-control-regex': 2,
     'no-debugger': 2,
@@ -113,7 +116,10 @@ module.exports = {
       'error',
       { allowShortCircuit: true, allowTernary: true }
     ],
-    'no-warning-comments': [0, { terms: ['todo', 'fixme'], location: 'start' }],
+    'no-warning-comments': [
+      0,
+      { terms: ['todo', 'fixme'], location: 'start' }
+    ],
     'no-with': 2,
     radix: 2,
     'vars-on-top': 2,
@@ -138,7 +144,10 @@ module.exports = {
     'eol-last': 1,
     'func-names': 0,
     'func-style': 0,
-    'key-spacing': [1, { beforeColon: false, afterColon: true }],
+    'key-spacing': [
+      1,
+      { beforeColon: false, afterColon: true }
+    ],
     'max-nested-callbacks': ['error', 6],
     'new-cap': [1, { newIsCap: true, capIsNew: false }],
     'new-parens': 1,
@@ -160,9 +169,15 @@ module.exports = {
     'semi-spacing': [1, { before: false, after: true }],
     'sort-vars': 0,
     'space-before-blocks': [1, 'always'],
-    'space-before-function-paren': [1, { anonymous: 'always', named: 'never' }],
+    'space-before-function-paren': [
+      1,
+      { anonymous: 'always', named: 'never' }
+    ],
     'space-in-parens': [1, 'never'],
-    'space-unary-ops': [1, { words: true, nonwords: false }],
+    'space-unary-ops': [
+      1,
+      { words: true, nonwords: false }
+    ],
     'wrap-regex': 0,
     'no-var': 2,
     'generator-star-spacing': [2, 'before'],
