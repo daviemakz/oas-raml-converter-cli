@@ -1,0 +1,28 @@
+{
+  "name": "oas-raml-converter-cli",
+  "version": "1.0.0",
+  "description": "This package is a CLI wrapper designed to allow conversion between OAS / RAML specifications via a command line interface. This module uses (https://github.com/mulesoft/oas-raml-converter) under the hood so its very reliable. Fully tested.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daviemakz/oas-raml-converter-cli.git"
+  },
+  "keywords": [
+    "oas",
+    "raml",
+    "converter",
+    "cli",
+    "swagger",
+    "swagger-ui",
+    "swagger-editor"
+  ],
+  "author": "David Makuni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daviemakz/oas-raml-converter-cli/issues"
+  },
+  "homepage": "https://github.com/daviemakz/oas-raml-converter-cli#readme"
+}
