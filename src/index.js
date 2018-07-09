@@ -8,6 +8,127 @@ const {
   getConverterType
 } = require('./process');
 
+// FUNCTION: Merge new changes into application
+const mergeChanges = (delta, options) => Object.assign({}, options, delta);
+
+// FUNCTION: Stage 1
+const stage1 = (stage, args, options) => {
+  return new Promise(resolve => {
+    if (!stage || stage <= 1) {
+      (async () =>
+        resolve(
+          mergeChanges(
+            await ((stage, args, options) =>
+              stage === 1
+                ? getConverterType.apply(null, args)
+                : getConverterType(false, void 0, options))(
+              stage,
+              args,
+              options
+            ),
+            options
+          )
+        ))();
+    } else {
+      resolve(options);
+    }
+  });
+};
+
+// FUNCTION: Stage 2
+const stage2 = (stage, args, options) =>
+  new Promise(resolve => {
+    if (!stage || stage <= 2) {
+      (async () =>
+        resolve(
+          mergeChanges(
+            await ((stage, args, options) =>
+              stage === 2
+                ? getConverterSource.apply(null, args)
+                : getConverterSource(false, void 0, options))(
+              stage,
+              args,
+              options
+            ),
+            options
+          )
+        ))();
+    } else {
+      resolve(options);
+    }
+  });
+
+// FUNCTION: Stage 3
+const stage3 = (stage, args, options) =>
+  new Promise(resolve => {
+    if (!stage || stage <= 3) {
+      (async () =>
+        resolve(
+          mergeChanges(
+            await ((stage, args, options) =>
+              stage === 3
+                ? getConverterDest.apply(null, args)
+                : getConverterDest(false, void 0, options))(
+              stage,
+              args,
+              options
+            ),
+            options
+          )
+        ))();
+    } else {
+      resolve(options);
+    }
+  });
+
+// FUNCTION: Stage 4
+const stage4 = (stage, args, options) =>
+  new Promise(resolve => {
+    if (!stage || stage <= 4) {
+      (async () =>
+        resolve(
+          mergeChanges(
+            await ((stage, args, options) =>
+              stage === 4
+                ? finalPrompt.apply(null, args)
+                : finalPrompt(false, options))(stage, args, options)
+          )
+        ))();
+    } else {
+      resolve(options);
+    }
+  });
+
+// FUNCTION: Process pipeline
+async function pipeline(stage, args, options) {
+  // Track stage
+  let currentState = stage;
+  let currentArgs = args;
+  let currentOptions = options;
+  // SUB-FUNCTION: Clear state
+  const clearState = options => {
+    // Clear state
+    currentState = void 0;
+    currentArgs = void 0;
+    // Return
+    return options;
+  };
+  // Stage 1
+  currentOptions = await stage1(currentState, currentArgs, currentOptions);
+  // Clear state
+  clearState();
+  // Stage 2
+  currentOptions = await stage2(currentState, currentArgs, currentOptions);
+  // Clear state
+  clearState();
+  // Stage 3
+  currentOptions = await stage3(currentState, currentArgs, currentOptions);
+  // Clear state
+  clearState();
+  // Stage 4
+  currentOptions = await stage4(currentState, currentArgs, currentOptions);
+}
+
 // Store session object
 let options = {
   converter: void 0,
@@ -17,127 +138,9 @@ let options = {
   pipeline: pipeline
 };
 
-// FUNCTION: Merge new changes into application
-const mergeChanges = (delta, options) =>
-  Object.assign({}, options, delta);
-
-// FUNCTION: Stage 1
-const stage1 = (stage, args) =>
-  new Promise(resolve => {
-    console.log('Resolving!');
-    if (stage >= 1) {
-      (async () => {
-        options = mergeChanges(
-          (await (stage === 1))
-            ? getConverterType.apply(null, args)
-            : getConverterType(false, void 0, options),
-          options
-        );
-        resolve();
-      })();
-    } else {
-      resolve();
-    }
-  });
-
-// FUNCTION: Stage 2
-const stage2 = (stage, args) =>
-  new Promise(resolve => {
-    if (stage >= 2) {
-      (async () => {
-        options = mergeChanges(
-          (await (stage === 2))
-            ? getConverterSource.apply(null, args)
-            : getConverterSource(false, void 0, options),
-          options
-        );
-        resolve();
-      })();
-    } else {
-      resolve();
-    }
-  });
-
-// FUNCTION: Stage 3
-const stage3 = (stage, args) =>
-  new Promise(resolve => {
-    if (stage >= 3) {
-      (async () => {
-        options = mergeChanges(
-          (await (stage === 3))
-            ? getConverterDest.apply(null, args)
-            : getConverterDest(false, void 0, options),
-          options
-        );
-        resolve();
-      })();
-    } else {
-      resolve();
-    }
-  });
-
-// FUNCTION: Stage 4
-const stage4 = (stage, args) =>
-  new Promise(resolve => {
-    if (stage >= 4) {
-      (async () => {
-        options = mergeChanges(
-          (await (stage === 4))
-            ? finalPrompt.apply(null, args)
-            : finalPrompt(false, void 0, options)
-        );
-        resolve();
-      })();
-    } else {
-      resolve();
-    }
-  });
-
-// FUNCTION: Process pipeline
-async function pipeline(
-  stage,
-  args = [false, void 0, options]
-) {
-  await stage1(stage || 1, args);
-  await stage2(stage || 2, args);
-  await stage3(stage || 3, args);
-  await stage4(stage || 4, args);
-
-  // Stage 0
-  // (stage >= 1) &&
-  //   (options = mergeChanges(
-  //     (await (stage === 1))
-  //       ? getConverterType.apply(null, args)
-  //       : getConverterType(false, void 0, options),
-  //     options
-  //   ));
-  // Stage 1
-  // (stage >= 2) &&
-  //   (options = mergeChanges(
-  //     (await (stage === 2))
-  //       ? getConverterSource.apply(null, args)
-  //       : getConverterSource(false, void 0, options),
-  //     options
-  //   ));
-  // Stage 2
-  // (stage >= 3) &&
-  //   (options = mergeChanges(
-  //     (await (stage === 3))
-  //       ? getConverterDest.apply(null, args)
-  //       : getConverterDest(false, void 0, options),
-  //     options
-  //   ));
-  // Stage 3
-  // (stage >= 4) &&
-  //   (options = mergeChanges(
-  //     (await (stage === 4))
-  //       ? finalPrompt.apply(null, args)
-  //       : finalPrompt(false, void 0, options)
-  //   ));
-}
 // FUNCTION: Start process
 try {
-  pipeline(1, []);
+  pipeline(void 0, [], options);
 } catch (err) {
   console.warn(`An error has occurred, ${err}`);
   console.error('Script will exit...');

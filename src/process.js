@@ -7,8 +7,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Load libs
-const mainOptions = require('./../');
-const converterIndex = require('./convIndex')();
+const converterIndex = require('./converter')();
 const { q1, q2, q3, q4 } = require('./prompts');
 
 // FUNCTION: Get file destination
@@ -22,14 +21,11 @@ const finalPrompt = (retry = false, options) =>
     // Ask question
     rd.question(q4(retry), answer => {
       // Check that the answer is correct
-      if (
-        !['y', 'n'].includes((answer || '').toLowerCase())
-      ) {
+      if (!['y', 'n'].includes((answer || '').toLowerCase())) {
         return (async () => {
           rd.close();
           try {
-            options.pipeline(4, [true, options]);
-            // await finalPrompt(true);
+            options.pipeline(4, [true, options], options);
           } catch (err) {
             console.warn(`An error has occurred, ${err}`);
             console.error('Script will exit...');
@@ -40,9 +36,7 @@ const finalPrompt = (retry = false, options) =>
       // Validate entry
       if ((answer || '').toLowerCase() !== 'y') {
         rd.close();
-        return reject(
-          'the conversion was cancelled by the user!'
-        );
+        return reject('the conversion was cancelled by the user!');
       }
       // Close readline
       rd.close();
@@ -51,9 +45,7 @@ const finalPrompt = (retry = false, options) =>
         'Checking destination file path & creating folders if necessary'
       );
       // Check that file path exists
-      return mkdirp(path.dirname(options.dest), function(
-        err
-      ) {
+      return mkdirp(path.dirname(options.dest), function(err) {
         // Error
         err && reject(err);
         console.log('Destination file path verified');
@@ -70,9 +62,7 @@ const finalPrompt = (retry = false, options) =>
             // Write file to disk
             return fs.writeFile(
               path.resolve(options.dest),
-              typeof raml === 'object'
-                ? JSON.stringify(raml, null, 2)
-                : raml,
+              typeof raml === 'object' ? JSON.stringify(raml, null, 2) : raml,
               'utf8',
               err => {
                 // Reject error
@@ -92,24 +82,28 @@ const finalPrompt = (retry = false, options) =>
   });
 
 // FUNCTION: Get file destination
-const getConverterDest = options =>
-  new Promise((resolve, reject) => {
+const getConverterDest = (retry = false, lastAnswer = void 0, options) =>
+  new Promise(resolve => {
     // Init readline
     let rd = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
     // Ask question
-    return rd.question(q3(), answer => {
+    return rd.question(q3(retry, lastAnswer), answer => {
       // Validate entry
       if (!answer) {
-        rd.close();
-        return reject(
-          'destination file path is not defined or is invalid!'
-        );
+        return (async () => {
+          rd.close();
+          try {
+            options.pipeline(3, [true, answer, options], options);
+          } catch (err) {
+            console.warn(`An error has occurred, ${err}`);
+            console.error('Script will exit...');
+            process.exit();
+          }
+        })();
       }
-      // // Assign converter and close the
-      // options.dest = answer;
       // Close readline
       rd.close();
       // Resolve
@@ -120,11 +114,7 @@ const getConverterDest = options =>
   });
 
 // FUNCTION: Get file source
-const getConverterSource = (
-  retry = false,
-  lastAnswer = void 0,
-  options
-) =>
+const getConverterSource = (retry = false, lastAnswer = void 0, options) =>
   new Promise(resolve => {
     // Init readline
     let rd = readline.createInterface({
@@ -138,14 +128,7 @@ const getConverterSource = (
         return (async () => {
           rd.close();
           try {
-            options.pipeline(2, [
-              true,
-              path.resolve(answer),
-              options
-            ]);
-            // await getConverterSource();
-            // await getConverterDest(options);
-            // await finalPrompt(false, options);
+            options.pipeline(2, [true, path.resolve(answer), options], options);
           } catch (err) {
             console.warn(`An error has occurred, ${err}`);
             console.error('Script will exit...');
@@ -153,8 +136,6 @@ const getConverterSource = (
           }
         })();
       }
-      // // Assign converter and close the
-      // options.source = answer;
       // Close readline
       rd.close();
       // Resolve
@@ -165,12 +146,8 @@ const getConverterSource = (
   });
 
 // FUNCTION: Get type of converter
-const getConverterType = (
-  retry = false,
-  lastAnswer = void 0,
-  options
-) =>
-  new Promise(resolve => {
+const getConverterType = (retry = false, lastAnswer = void 0, options) => {
+  return new Promise(resolve => {
     // Init readline
     let rd = readline.createInterface({
       input: process.stdin,
@@ -183,11 +160,7 @@ const getConverterType = (
         return (async () => {
           rd.close();
           try {
-            options.pipeline(1, [true, answer, options]);
-            // await getConverterType(true, answer, options);
-            // await getConverterSource(false, void 0, options);
-            // await getConverterDest(options);
-            // await finalPrompt(false, options);
+            options.pipeline(1, [true, answer, options], options);
           } catch (err) {
             console.warn(`An error has occurred, ${err}`);
             console.error('Script will exit...');
@@ -195,9 +168,6 @@ const getConverterType = (
           }
         })();
       }
-      // // Assign converter and close the
-      // options.converter = converterIndex[answer].con;
-      // options.option = answer;
       // Close readline
       rd.close();
       // Resolve
@@ -207,6 +177,7 @@ const getConverterType = (
       });
     });
   });
+};
 
 // Exports
 module.exports = {

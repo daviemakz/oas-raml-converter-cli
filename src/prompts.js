@@ -23,8 +23,7 @@ const q2 = (retry, answer) =>
     : 'Enter the source path of the file: ';
 
 // Question 3
-const q3 = () =>
-  'Enter the destination path for the file: ';
+const q3 = () => 'Enter the destination path for the file: ';
 
 // Question 4
 const q4 = retry =>
