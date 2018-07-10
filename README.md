@@ -1,3 +1,5 @@
+[![Greenkeeper badge](https://badges.greenkeeper.io/daviemakz/oas-raml-converter-cli.svg)](https://greenkeeper.io/)
+
 [![NPM](https://nodei.co/npm/oas-raml-converter-cli.png?compact=true)](https://www.npmjs.com/package/oas-raml-converter-cli)
 
 [![Build Status](https://travis-ci.org/daviemakz/oas-raml-converter-cli.svg?branch=master)](https://travis-ci.org/daviemakz/oas-raml-converter-cli)
