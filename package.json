@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/daviemakz/oas-raml-converter-cli#readme",
   "dependencies": {
-    "fs": "^0.0.1-security",
+    "fs": "0.0.2",
     "mkdirp": "^0.5.1",
     "oas-raml-converter": "^1.1.34",
     "path": "^0.12.7",
