@@ -12,6 +12,13 @@
     "url": "git+https://github.com/daviemakz/oas-raml-converter-cli.git"
   },
   "keywords": [
+    "oas3",
+    "oas2",
+    "oas1",
+    "endpoints",
+    "tdd",
+    "rest",
+    "api",
     "oas",
     "raml",
     "converter",
