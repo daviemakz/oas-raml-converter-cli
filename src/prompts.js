@@ -1,8 +1,7 @@
 'use strict';
 
 // Question 1
-const q1 = (retry, answer) => `
-${
+const q1 = (retry, answer) => `${
   retry
     ? `"${answer}" is not a valid option! Please choose a valid option`
     : 'Choose the type of converter you want to use'

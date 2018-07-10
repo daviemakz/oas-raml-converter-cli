@@ -12,7 +12,7 @@ _Supports Node 6.x +_
 
 # OAS RAML Converter (CLI)
 
-This package is a CLI wrapper designed to allow conversion between OAS / RAML specifications via a command line interface. This module uses (https://github.com/mulesoft/oas-raml-converter) under the hood so its very reliable. This package works across all platforms
+This package is a CLI wrapper designed to allow conversion between OAS / RAML specifications via a command line interface. This module uses (https://github.com/mulesoft/oas-raml-converter) under the hood so its very reliable. This package works across all platforms and is intended to be used globally.
 
 ## Installation
 
@@ -28,9 +28,9 @@ Install the module globally via Yarn or NPM:
 
 ## Executing
 
-To run the CLI utility do the following after installing:
+To run the CLI utility run the following command after installing:
 
-1.  Start the utility via `oas-raml-converter-cli` in the console and you will see this:
+1.  Start the utility via `oasraml-cli` or `oas-raml-converter-cli` in the console and you will see this:
 
 ```
 Choose the type of converter you want to use (enter option 1-5):
@@ -50,13 +50,13 @@ Enter now:
 Enter the source path of the file:
 ```
 
-3.  Enter a destination path. If the folders do not exist the application will create them. Ensure you have adequate permissions for your folder:
+3.  Enter a destination path. If the folders do not exist the application will create them. Ensure you have adequate permissions in your target destination:
 
 ```
 Enter the destination path for the file:
 ```
 
-4.  A final prompt before performing the conversion:
+4.  A final prompt before performing the conversion, press (y) to continue or (n) to abort:
 
 ```
 Are you sure you want to continue (y/n):

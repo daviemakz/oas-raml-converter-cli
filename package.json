@@ -3,9 +3,14 @@
   "version": "1.0.2",
   "description": "This package is a CLI wrapper designed to allow conversion between OAS / RAML specifications via a command line interface. This module uses (https://github.com/mulesoft/oas-raml-converter) under the hood so its very reliable. Fully tested.",
   "main": "index.js",
+  "preferGlobal": true,
   "scripts": {
     "test": "mocha --no-deprecation ./test/*.js",
     "format": "prettier --config ./.prettierrc --write ./**/*.js"
+  },
+  "bin": {
+    "oasraml-cli": "./bin/oasraml-cli.js",
+    "oas-raml-converter-cli": "./bin/oasraml-cli.js"
   },
   "repository": {
     "type": "git",
