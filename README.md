@@ -8,7 +8,7 @@
 
 This package allows streaming &amp; non-streaming micro-services to be build on the front-end and the back-end. Within the browser it uses Web Workers while in the server-side it utilises child processes
 
-_Supports Node 4.x +_
+_Supports Node 6.x +_
 
 # OAS RAML Converter (CLI)
 
