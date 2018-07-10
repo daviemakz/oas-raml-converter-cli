@@ -7,11 +7,6 @@ const converter = require('oas-raml-converter');
 
 // Load libs
 const converterCore = require('../src/converter')();
-const {
-  getConverterDest,
-  getConverterSource,
-  getConverterType
-} = require('../src/process');
 
 // Converter reference object
 const converterRef = {
