@@ -1,5 +1,3 @@
-[![Greenkeeper badge](https://badges.greenkeeper.io/daviemakz/oas-raml-converter-cli.svg)](https://greenkeeper.io/)
-
 [![NPM](https://nodei.co/npm/oas-raml-converter-cli.png?compact=true)](https://www.npmjs.com/package/oas-raml-converter-cli)
 
 [![Build Status](https://travis-ci.org/daviemakz/oas-raml-converter-cli.svg?branch=master)](https://travis-ci.org/daviemakz/oas-raml-converter-cli)
@@ -30,7 +28,7 @@ Install the module globally via Yarn or NPM:
 
 To run the CLI utility run the following command after installing:
 
-1)  Start the utility via `oasraml-cli` or `oas-raml-converter-cli` in the console and you will see this:
+1.  Start the utility via `oasraml-cli` or `oas-raml-converter-cli` in the console and you will see this:
 
 ```
 Choose the type of converter you want to use (enter option 1-5):
@@ -44,19 +42,19 @@ Choose the type of converter you want to use (enter option 1-5):
 Enter now:
 ```
 
-2)  After choosing your option select the source file (the utility will check if it exists before continuing):
+2.  After choosing your option select the source file (the utility will check if it exists before continuing):
 
 ```
 Enter the source path of the file:
 ```
 
-3)  Enter a destination path. If the folders do not exist the application will create them. Ensure you have adequate permissions in your target destination:
+3.  Enter a destination path. If the folders do not exist the application will create them. Ensure you have adequate permissions in your target destination:
 
 ```
 Enter the destination path for the file:
 ```
 
-4)  A final prompt before performing the conversion, press (y) to continue or (n) to abort:
+4.  A final prompt before performing the conversion, press (y) to continue or (n) to abort:
 
 ```
 Are you sure you want to continue (y/n):
