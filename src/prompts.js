@@ -19,7 +19,7 @@ Enter now: `;
 // Question 2
 const q2 = (retry, answer) =>
   retry
-    ? `The file path "${answer}" was not found! Please try again:`
+    ? `The file path "${answer}" was not found! Please try again: `
     : 'Enter the source path of the file: ';
 
 // Question 3

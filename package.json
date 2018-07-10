@@ -4,7 +4,7 @@
   "description": "This package is a CLI wrapper designed to allow conversion between OAS / RAML specifications via a command line interface. This module uses (https://github.com/mulesoft/oas-raml-converter) under the hood so its very reliable. Fully tested.",
   "main": "index.js",
   "scripts": {
-    "test": "npm test",
+    "test": "mocha --no-deprecation ./test/*.js",
     "format": "prettier --config ./.prettierrc --write ./**/*.js"
   },
   "repository": {
@@ -35,7 +35,9 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",
+    "bdd-stdin": "^0.2.0",
     "eslint": "^5.1.0",
+    "mocha": "^5.2.0",
     "prettier": "^1.13.7",
     "prettier-eslint": "^8.8.2"
   }
