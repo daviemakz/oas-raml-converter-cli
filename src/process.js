@@ -18,7 +18,7 @@ const handleFatalError = err => {
 };
 
 // FUNCTION: Get file destination
-const finalPrompt = (retry = false, options) =>
+const finalPrompt = (retry = false, lastAnswer = void 0, options) =>
   new Promise((resolve, reject) => {
     // Init readline
     let rd = readline.createInterface({
@@ -26,7 +26,7 @@ const finalPrompt = (retry = false, options) =>
       output: process.stdout
     });
     // Ask question
-    rd.question(q4(retry), answer => {
+    rd.question(q4(retry, lastAnswer), answer => {
       // Check that the answer is correct
       if (!['y', 'n'].includes((answer || '').toLowerCase())) {
         return (async () => {
@@ -63,7 +63,9 @@ const finalPrompt = (retry = false, options) =>
         return options.converter
           .convertFile(options.source)
           .then(raml => {
-            console.log('The conversion was successful');
+            console.log(
+              'The conversion was successful, attempting to save output to file'
+            );
             // Write file to disk
             return fs.writeFile(
               path.resolve(options.dest),
@@ -73,9 +75,7 @@ const finalPrompt = (retry = false, options) =>
                 // Reject error
                 err && reject(err);
                 // Show result
-                console.log(
-                  'The file has been saved successfully! Script will exit :)'
-                );
+                console.log('The file has been saved successfully!');
                 // Resolve
                 return resolve({});
               }

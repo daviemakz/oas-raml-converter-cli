@@ -12,103 +12,27 @@ const {
 // FUNCTION: Merge new changes into application
 const mergeChanges = (delta, options) => Object.assign({}, options, delta);
 
-// FUNCTION: Stage 1
-const stage1 = (stage, args, options) => {
-  return new Promise(resolve => {
-    if (!stage || stage <= 1) {
+// FUNCTION: Promise assembler
+const promiseBuilder = (currentStage, promiseFunction) => (
+  stage,
+  args,
+  options
+) =>
+  new Promise(resolve => {
+    if (!stage || stage <= currentStage) {
       (async () => {
         try {
           resolve(
             mergeChanges(
               await ((stage, args, options) =>
-                stage === 1
-                  ? getConverterType.apply(null, args)
-                  : getConverterType(false, void 0, options))(
+                stage === currentStage
+                  ? promiseFunction.apply(null, args)
+                  : promiseFunction(false, void 0, options))(
                 stage,
                 args,
                 options
               ),
               options
-            )
-          );
-        } catch (err) {
-          handleFatalError(err);
-        }
-      })();
-    } else {
-      resolve(options);
-    }
-  });
-};
-
-// FUNCTION: Stage 2
-const stage2 = (stage, args, options) =>
-  new Promise(resolve => {
-    if (!stage || stage <= 2) {
-      (async () => {
-        try {
-          resolve(
-            mergeChanges(
-              await ((stage, args, options) =>
-                stage === 2
-                  ? getConverterSource.apply(null, args)
-                  : getConverterSource(false, void 0, options))(
-                stage,
-                args,
-                options
-              ),
-              options
-            )
-          );
-        } catch (err) {
-          handleFatalError(err);
-        }
-      })();
-    } else {
-      resolve(options);
-    }
-  });
-
-// FUNCTION: Stage 3
-const stage3 = (stage, args, options) =>
-  new Promise(resolve => {
-    if (!stage || stage <= 3) {
-      (async () => {
-        try {
-          resolve(
-            mergeChanges(
-              await ((stage, args, options) =>
-                stage === 3
-                  ? getConverterDest.apply(null, args)
-                  : getConverterDest(false, void 0, options))(
-                stage,
-                args,
-                options
-              ),
-              options
-            )
-          );
-        } catch (err) {
-          handleFatalError(err);
-        }
-      })();
-    } else {
-      resolve(options);
-    }
-  });
-
-// FUNCTION: Stage 4
-const stage4 = (stage, args, options) =>
-  new Promise(resolve => {
-    if (!stage || stage <= 4) {
-      (async () => {
-        try {
-          resolve(
-            mergeChanges(
-              await ((stage, args, options) =>
-                stage === 4
-                  ? finalPrompt.apply(null, args)
-                  : finalPrompt(false, options))(stage, args, options)
             )
           );
         } catch (err) {
@@ -137,19 +61,35 @@ async function pipeline(stage, args, options) {
     return options;
   };
   // Stage 1
-  currentOptions = await stage1(currentState, currentArgs, currentOptions);
+  currentOptions = await promiseBuilder(1, getConverterType)(
+    currentState,
+    currentArgs,
+    currentOptions
+  );
   // Clear state
   clearState(currentOptions, 1, currentState);
   // Stage 2
-  currentOptions = await stage2(currentState, currentArgs, currentOptions);
+  currentOptions = await promiseBuilder(2, getConverterSource)(
+    currentState,
+    currentArgs,
+    currentOptions
+  );
   // Clear state
   clearState(currentOptions, 2, currentState);
   // Stage 3
-  currentOptions = await stage3(currentState, currentArgs, currentOptions);
+  currentOptions = await promiseBuilder(3, getConverterDest)(
+    currentState,
+    currentArgs,
+    currentOptions
+  );
   // Clear state
   clearState(currentOptions, 3, currentState);
   // Stage 4
-  currentOptions = await stage4(currentState, currentArgs, currentOptions);
+  currentOptions = await promiseBuilder(4, finalPrompt)(
+    currentState,
+    currentArgs,
+    currentOptions
+  );
 }
 
 // Store session object
