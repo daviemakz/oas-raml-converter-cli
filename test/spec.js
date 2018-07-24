@@ -2,7 +2,6 @@
 
 // Load NPM modules
 const { assert } = require('chai');
-const bddStdin = require('bdd-stdin');
 const converter = require('oas-raml-converter');
 
 // Load libs
