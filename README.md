@@ -1,4 +1,5 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/daviemakz/oas-raml-converter-cli.svg)](https://greenkeeper.io/)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdaviemakz%2Foas-raml-converter-cli.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdaviemakz%2Foas-raml-converter-cli?ref=badge_shield)
 
 [![NPM](https://nodei.co/npm/oas-raml-converter-cli.png?compact=true)](https://www.npmjs.com/package/oas-raml-converter-cli)
 
@@ -75,3 +76,7 @@ or
 ## Contributing
 
 All contributions are very welcome, please read my [CONTRIBUTING.md](https://github.com/daviemakz/oas-raml-converter-cli/blob/master/CONTRIBUTING.md) first. You can submit any ideas as [pull requests](https://github.com/daviemakz/oas-raml-converter-cli/pulls) or as [GitHub issues](https://github.com/daviemakz/oas-raml-converter-cli/issues). If you'd like to improve code, please feel free!
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdaviemakz%2Foas-raml-converter-cli.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdaviemakz%2Foas-raml-converter-cli?ref=badge_large)
